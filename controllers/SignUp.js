@@ -82,27 +82,13 @@
 // };
 
 const bcrypt = require("bcrypt");
-const multer = require("multer");
-const path = require("path");
+const upload = require("../utils/multerConfig");
 const User = require("../models/User");
 const { isEmail } = require("validator");
 
 const saltRounds = 10;
 
 // Multer setup for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/Images");
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-const upload = multer({ storage: storage });
 
 // Validation function for signup data
 const validateSignUpData = async (req, res) => {
