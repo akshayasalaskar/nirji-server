@@ -1,33 +1,46 @@
-// controllers/PostController.js
 const Post = require("../models/Post");
+const multer = require("multer");
 const upload = require("../utils/multerConfig");
 
-// Upload a new post (image)
-const uploadPost = [
-  upload.single("image"),
-  async (req, res) => {
-    try {
-      const newPost = await Post.create({
-        image: req.file.filename,
-        user: req.user._id,
-      });
-      res
-        .status(201)
-        .json({ message: "Post uploaded successfully", post: newPost });
-    } catch (error) {
-      res.status(500).json({ message: "Error uploading post", error });
-    }
-  },
-];
-
-// Get all posts by the authenticated user
-const getUserPosts = async (req, res) => {
+const uploadPost = async (req, res) => {
   try {
-    const posts = await Post.find({ user: req.user._id });
-    res.json({ posts });
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded" });
+    }
+
+    const newPost = new Post({
+      image: `/Images/${req.file.filename}`,
+      user: req.user._id,
+    });
+
+    await newPost.save();
+    res
+      .status(201)
+      .json({ message: "Image uploaded successfully", image: newPost.image });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching posts", error });
+    if (
+      error instanceof multer.MulterError &&
+      error.code === "LIMIT_FILE_SIZE"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "File size is too large. Maximum allowed is 5 MB." });
+    }
+    console.error("Error uploading image:", error);
+    res.status(500).json({ message: "Error uploading image" });
   }
 };
 
-module.exports = { uploadPost, getUserPosts };
+// Get all images of the logged-in user
+const getUserImages = async (req, res) => {
+  try {
+    const posts = await Post.find({ user: req.user._id });
+    const images = posts.map((post) => post.image);
+    res.status(200).json({ images });
+  } catch (error) {
+    console.error("Error fetching user images:", error);
+    res.status(500).json({ message: "Error fetching images" });
+  }
+};
+
+module.exports = { uploadPost, getUserImages };
