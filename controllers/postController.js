@@ -2,6 +2,7 @@ const Post = require("../models/Post");
 const multer = require("multer");
 const upload = require("../utils/multerConfig");
 
+// Handles image upload, saves the image path and user ID to the database, and responds with success or error messages.
 const uploadPost = async (req, res) => {
   try {
     if (!req.file) {
@@ -31,7 +32,7 @@ const uploadPost = async (req, res) => {
   }
 };
 
-// Get all images of the logged-in user
+// Retrieves all image paths associated with the logged-in user and sends them as a response.
 const getUserImages = async (req, res) => {
   try {
     const posts = await Post.find({ user: req.user._id });

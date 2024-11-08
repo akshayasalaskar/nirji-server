@@ -5,7 +5,7 @@ const { isEmail } = require("validator");
 
 const saltRounds = 10;
 
-// Validation function for signup data
+// Checks if signup fields are complete and valid
 const validateSignUpData = async (req, res) => {
   const { name, email, password, profilename, bio } = req.body;
 
@@ -45,7 +45,7 @@ const validateSignUpData = async (req, res) => {
   return true;
 };
 
-// Signup handler
+// Uses multer to handle file uploads, hashes the password, and creates a new user in the database if all validations pass,
 const signUpHandler = [
   upload.single("file"),
   async (req, res) => {

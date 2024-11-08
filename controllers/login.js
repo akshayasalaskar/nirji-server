@@ -1,4 +1,4 @@
-// the idea behind this page is: When the user logs in we will create a sign up token and give it to user, user will save that token in his cookie
+// The idea behind this page is: When the user logs in we will create a sign up token and give it to user, user will save that token in his cookie
 // if user has cookie and his cookie is valid then we can say that usesr is authenticated
 
 const bcrypt = require("bcrypt");

@@ -1,3 +1,6 @@
+// This code verifies a JSON Web Token (JWT) received from the request body. If the token is valid, it responds with
+// authenticated data; otherwise, it returns an error message
+
 const jwt = require("jsonwebtoken");
 module.exports = (req, res) => {
   const { token } = req.body;
